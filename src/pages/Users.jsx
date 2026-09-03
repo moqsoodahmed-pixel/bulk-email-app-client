@@ -14,12 +14,16 @@ function fmt(dateStr) {
 // Add User Modal
 // ---------------------------------------------------------------------------
 function AddUserModal({ onClose, onCreated }) {
-  const [form,    setForm]    = useState({ name: '', email: '', password: '', confirm: '' });
+  const [form,    setForm]    = useState({ name: '', username: '', email: '', password: '', confirm: '' });
   const [error,   setError]   = useState('');
   const [loading, setLoading] = useState(false);
   const [showPw,  setShowPw]  = useState(false);
 
   const set = (k) => (e) => setForm((f) => ({ ...f, [k]: e.target.value }));
+  const setNameAuto = (val) => {
+    const auto = val.toLowerCase().trim().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '').slice(0, 20);
+    setForm((f) => ({ ...f, name: val, username: f.username || auto }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +38,7 @@ function AddUserModal({ onClose, onCreated }) {
     try {
       const { data } = await api.post('/auth/users', {
         name:     form.name.trim(),
+        username: form.username.trim(),
         email:    form.email.trim(),
         password: form.password,
       });
@@ -67,6 +72,23 @@ function AddUserModal({ onClose, onCreated }) {
                   onChange={set('name')}
                   required
                 />
+              </div>
+
+
+              <div className="mb-3">
+                <label className="form-label small fw-semibold">Username</label>
+                <div className="input-group">
+                  <span className="input-group-text text-muted">@</span>
+                  <input
+                    className="form-control"
+                    placeholder="sneha_sharma"
+                    value={form.username}
+                    onChange={(e) => setForm((f) => ({ ...f, username: e.target.value.toLowerCase().replace(/[^a-z0-9_]/g, '') }))}
+                    required
+                    maxLength={20}
+                  />
+                </div>
+                <div className="form-text">Used to sign in and shown in blast logs.</div>
               </div>
 
               <div className="mb-3">
@@ -317,6 +339,7 @@ export default function Users() {
               <thead className="table-light">
                 <tr>
                   <th>Name</th>
+                  <th>Username</th>
                   <th>Email</th>
                   <th>Role</th>
                   <th>Last Login</th>
@@ -340,6 +363,7 @@ export default function Users() {
                         </span>
                       ) : null}
                     </td>
+                    <td className="small text-muted">@{u.username || '—'}</td>
                     <td className="small font-monospace">{u.email}</td>
                     <td>
                       <span className="badge bg-secondary bg-opacity-10 text-secondary border border-secondary border-opacity-25">
