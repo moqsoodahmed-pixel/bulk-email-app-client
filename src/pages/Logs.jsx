@@ -245,7 +245,7 @@ export default function Logs() {
                   <tr>
                     <th style={{ width: 180 }}>Triggered</th>
                     <th>Campaign</th>
-                    <th>By</th>
+                    <th>Triggered by</th>
                     <th>Company</th>
                     <th className="text-end">Targeted</th>
                     <th className="text-end">Sent</th>
@@ -268,7 +268,9 @@ export default function Logs() {
                           <div className="fw-semibold small">{log.campaignName}</div>
                           <div className="text-muted" style={{ fontSize: 11 }}>{log.subject}</div>
                         </td>
-                        <td className="small">{log.triggeredBy?.userEmail || '—'}</td>
+                        <td className="small">
+                          {log.triggeredBy?.userName || log.triggeredBy?.userEmail || '—'}
+                        </td>
                         <td>
                           <span className={`badge bg-${cm.color} bg-opacity-10 text-${cm.color} border border-${cm.color} border-opacity-25`}>
                             {cm.label}
