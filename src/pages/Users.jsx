@@ -51,7 +51,7 @@ function AddUserModal({ onClose, onCreated }) {
       <div className="modal-dialog">
         <div className="modal-content">
           <div className="modal-header">
-            <h5 className="modal-title">Add New Admin User</h5>
+            <h5 className="modal-title">Add New User</h5>
             <button className="btn-close" onClick={onClose} />
           </div>
           <form onSubmit={handleSubmit}>
@@ -287,7 +287,7 @@ export default function Users() {
         <div>
           <h4 className="mb-0 fw-semibold">👤 User Accounts</h4>
           <p className="text-muted small mb-0">
-            Manage admin accounts. Passwords are stored as secure bcrypt hashes in MongoDB only.
+            Manage user accounts. Passwords are stored as secure bcrypt hashes in MongoDB only.
           </p>
         </div>
         <button className="btn btn-primary btn-sm" onClick={() => setShowAdd(true)}>

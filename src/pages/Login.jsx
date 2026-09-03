@@ -13,8 +13,8 @@ export default function Login() {
   const [error,    setError]   = useState('');
   const [info,     setInfo]    = useState('');
   const [loading,  setLoading] = useState(false);
-  // null = unknown, true = admin exists, false = no admin yet
-  const [adminExists, setAdminExists] = useState(null);
+  // null = unknown, true = user exists, false = no user yet
+  const [userExists, setUserExists] = useState(null);
 
   const { login } = useAuth();
   const navigate  = useNavigate();
@@ -25,29 +25,26 @@ export default function Login() {
     setInfo('');
     // Reset form fields
     setName(''); setEmail(''); setPw(''); setConfirm('');
-    // Check admin status only when switching TO signup, and only once
-    if (t === 'signup' && adminExists === null) {
-      checkAdminExists();
+    // Check user status only when switching TO signup, and only once
+    if (t === 'signup' && userExists === null) {
+      checkUserExists();
     }
   }
 
-  async function checkAdminExists() {
+  async function checkUserExists() {
     try {
-      // seed-admin returns 403 if admin exists, 200-range otherwise
-      // We do a lightweight GET on /api/health and check user count via a dummy POST
-      // Simplest: just try the seed-admin with dummy data — if 403 → admin exists
+      // Probe: seed-admin returns 403 if a user already exists
       await api.post('/auth/seed-admin', { _probe: true });
-      // If we get here somehow, set false (shouldn't happen normally)
-      setAdminExists(false);
+      // No user yet
+      setUserExists(false);
     } catch (err) {
       const status = err.response?.status;
       const msg    = err.response?.data?.error || '';
       if (status === 403 || msg.includes('already exists') || msg.includes('disabled')) {
-        setAdminExists(true);
+        setUserExists(true);
       } else {
-        // Any other error (400 = missing fields) means the endpoint is reachable
-        // and admin does NOT exist yet (seed-admin rejected due to missing body, not due to existing admin)
-        setAdminExists(false);
+        // 400 = missing fields = endpoint reachable but no user exists yet
+        setUserExists(false);
       }
     }
   }
@@ -83,7 +80,7 @@ export default function Login() {
       const status = err.response?.status;
       const msg    = err.response?.data?.error || 'Signup failed.';
       if (status === 403 || msg.includes('already exists') || msg.includes('disabled')) {
-        setAdminExists(true);
+        setUserExists(true);
         setError('');
       } else {
         setError(msg);
@@ -148,21 +145,21 @@ export default function Login() {
           {tab === 'signup' && (
             <>
               {/* Case 1: checking */}
-              {adminExists === null && (
+              {userExists === null && (
                 <div className="text-center py-4 text-muted small">
                   <div className="spinner-border spinner-border-sm me-2" />
                   Checking setup status…
                 </div>
               )}
 
-              {/* Case 2: admin already exists — show message, no form */}
-              {adminExists === true && (
+              {/* Case 2: user already exists — show message, no form */}
+              {userExists === true && (
                 <div className="text-center py-3">
                   <div style={{ fontSize: 40 }}>🔒</div>
-                  <h6 className="mt-3 fw-semibold">Admin account already set up</h6>
+                  <h6 className="mt-3 fw-semibold">Account setup complete</h6>
                   <p className="text-muted small mt-2 mb-3">
-                    New user accounts are created by an existing admin.<br />
-                    Ask your admin to add you from the <strong>Users</strong> page.
+                    New accounts are added by an existing user.<br />
+                    Ask them to add you from the <strong>Users</strong> page.
                   </p>
                   <button className="btn btn-outline-primary btn-sm" onClick={() => switchTab('login')}>
                     Go to Sign In →
@@ -170,11 +167,11 @@ export default function Login() {
                 </div>
               )}
 
-              {/* Case 3: no admin yet — show signup form */}
-              {adminExists === false && (
+              {/* Case 3: no user yet — show signup form */}
+              {userExists === false && (
                 <>
                   <div className="alert alert-info py-2 small mb-3">
-                    <strong>First-time setup.</strong> Create the first admin account.
+                    <strong>First-time setup.</strong> Create the first account.
                     After this, new users are added from the <strong>Users</strong> page.
                   </div>
                   {error && <div className="alert alert-danger py-2 small mb-3">{error}</div>}
