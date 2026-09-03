@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Leads from './pages/Lead';
 import Campaigns from './pages/Campaigns';
+import Logs from './pages/Logs';
 
 function AppRoutes() {
   return (
@@ -19,10 +20,11 @@ function AppRoutes() {
           <ProtectedRoute>
             <Layout>
               <Routes>
-                <Route path="/dashboard" element={<Dashboard />} />
-                <Route path="/leads" element={<Leads />} />
-                <Route path="/campaigns" element={<Campaigns />} />
-                <Route path="*" element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard"  element={<Dashboard />} />
+                <Route path="/leads"      element={<Leads />} />
+                <Route path="/campaigns"  element={<Campaigns />} />
+                <Route path="/logs"       element={<Logs />} />
+                <Route path="*"           element={<Navigate to="/dashboard" replace />} />
               </Routes>
             </Layout>
           </ProtectedRoute>

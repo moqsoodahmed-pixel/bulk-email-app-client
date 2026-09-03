@@ -123,12 +123,13 @@ function SendProgress({ stats }) {
 }
 
 // ---------------------------------------------------------------------------
-// Multi-account Brevo quota panel
+// Multi-account Brevo quota panel & DKIM domain status
 // ---------------------------------------------------------------------------
 function BrevoStatusPanel({ company }) {
   const [data, setData]       = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError]     = useState('');
+  const [showDns, setShowDns] = useState(false);
 
   useEffect(() => {
     setLoading(true); setData(null); setError('');
@@ -147,6 +148,9 @@ function BrevoStatusPanel({ company }) {
   if (!data)  return null;
 
   const low = data.totalRemaining < 50;
+  const isAuth = data.domainStatus?.authenticated === true;
+  const dkim1 = data.domainStatus?.dnsRecords?.dkim1Record;
+  const dkim2 = data.domainStatus?.dnsRecords?.dkim2Record;
 
   return (
     <div className={`alert ${low ? 'alert-warning' : 'alert-success'} py-2 small mb-3`}>
@@ -156,29 +160,58 @@ function BrevoStatusPanel({ company }) {
           {data.totalRemaining} / {data.totalCapacity} emails left this month
         </span>
       </div>
-      <div className="d-flex flex-wrap gap-2">
+      <div className="d-flex flex-wrap gap-2 mb-2">
         {data.accounts.map((acc) => {
           const rem    = acc.quota?.remaining ?? null;
           const cap    = acc.quota?.total ?? 300;
           const pct    = cap > 0 && rem != null ? Math.round((rem / cap) * 100) : 0;
+          const isExhausted = rem === 0;
           const accLow = rem != null && rem < 30;
           return (
-            <div key={acc.index} className="border rounded px-2 py-1 bg-white" style={{ minWidth: 120 }}>
-              <div className="d-flex justify-content-between">
-                <span className="text-muted">Account {acc.index}</span>
-                <span className={accLow ? 'text-danger fw-bold' : 'text-success fw-bold'}>
-                  {rem != null ? rem : '…'} left
+            <div key={acc.index} className="border rounded px-2 py-1 bg-white" style={{ minWidth: 130 }}>
+              <div className="d-flex justify-content-between align-items-center gap-2">
+                <span className="text-muted fw-semibold">Account {acc.index}</span>
+                <span className={isExhausted ? 'badge bg-danger' : (accLow ? 'badge bg-warning text-dark' : 'badge bg-success')}>
+                  {rem != null ? (isExhausted ? '0 left (exhausted)' : `${rem} left`) : '…'}
                 </span>
               </div>
               <div className="progress mt-1" style={{ height: 4 }}>
-                <div className={`progress-bar ${accLow ? 'bg-danger' : 'bg-success'}`} style={{ width: `${pct}%` }} />
+                <div className={`progress-bar ${isExhausted ? 'bg-danger' : (accLow ? 'bg-warning' : 'bg-success')}`} style={{ width: `${pct}%` }} />
               </div>
               <div className="text-muted" style={{ fontSize: 10 }}>{pct}% remaining</div>
             </div>
           );
         })}
       </div>
-      {low && (
+
+      {/* Domain DKIM status */}
+      {data.domainStatus && (
+        <div className="mt-2 pt-2 border-top">
+          {isAuth ? (
+            <div className="text-success small d-flex align-items-center gap-1">
+              <span>✓</span> <strong>DKIM Authenticated:</strong> {data.fromDomain} is verified and ready for high inbox delivery.
+            </div>
+          ) : (
+            <div className="text-danger small">
+              <div className="d-flex justify-content-between align-items-center">
+                <span>⚠️ <strong>DKIM Unauthenticated:</strong> {data.fromDomain} is missing DKIM CNAME records in DNS. Emails may land in Spam or be rejected by Gmail.</span>
+                <button type="button" className="btn btn-sm btn-outline-danger py-0 px-2 text-nowrap ms-2" onClick={() => setShowDns(!showDns)}>
+                  {showDns ? 'Hide DNS' : 'View DNS Records'}
+                </button>
+              </div>
+              {showDns && (
+                <div className="bg-white p-2 rounded border border-danger border-opacity-25 mt-2 text-dark font-monospace" style={{ fontSize: 11 }}>
+                  <div className="fw-bold text-danger mb-1 font-sans-serif">Add these 2 CNAME records in Cloudflare DNS (DNS-only / grey cloud):</div>
+                  <div className="mb-1"><strong>Record 1:</strong> Host: <code>{dkim1?.host_name || 'brevo1._domainkey'}</code> &rarr; Value: <code>{dkim1?.value || `b1.${data.fromDomain.replace('.', '-')}.dkim.brevo.com`}</code></div>
+                  <div><strong>Record 2:</strong> Host: <code>{dkim2?.host_name || 'brevo2._domainkey'}</code> &rarr; Value: <code>{dkim2?.value || `b2.${data.fromDomain.replace('.', '-')}.dkim.brevo.com`}</code></div>
+                </div>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
+      {low && !data.domainStatus && (
         <div className="mt-2 text-danger">
           ⚠️ Running low — add more keys in .env or wait for monthly reset.
         </div>
