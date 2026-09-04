@@ -5,7 +5,7 @@ import api from '../services/api';
 // Constants
 // ---------------------------------------------------------------------------
 
-const STATUS_BADGE = { active: 'success', unsubscribed: 'warning', bounced: 'danger' };
+const STATUS_BADGE = { active: 'success', unsubscribed: 'warning', bounced: 'danger', not_sent: 'danger' };
 
 const RESOLUTION_META = {
   new:        { label: 'New',             color: 'success',   icon: '✦', tip: 'Will be inserted.' },
@@ -20,7 +20,8 @@ const RESOLUTION_META = {
 // ---------------------------------------------------------------------------
 
 function Badge({ status }) {
-  return <span className={`badge bg-${STATUS_BADGE[status] ?? 'secondary'}`}>{status}</span>;
+  const label = status === 'not_sent' ? 'not sent' : status;
+  return <span className={`badge bg-${STATUS_BADGE[status] ?? 'secondary'}`}>{label}</span>;
 }
 
 function ResBadge({ resolution }) {
@@ -510,6 +511,7 @@ export default function Leads() {
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}>
               <option value="">All statuses</option>
               <option value="active">Active</option>
+              <option value="not_sent">⚠ Not sent (failed)</option>
               <option value="unsubscribed">Unsubscribed</option>
               <option value="bounced">Bounced</option>
             </select>

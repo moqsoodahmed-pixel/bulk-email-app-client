@@ -6,25 +6,27 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import Leads from './pages/Lead';
 import Campaigns from './pages/Campaigns';
+import History from './pages/History';
 import Logs from './pages/Logs';
+import Users from './pages/Users';
 
 function AppRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
-
-      {/* All protected pages share the sidebar Layout */}
       <Route
         path="/*"
         element={
           <ProtectedRoute>
             <Layout>
               <Routes>
-                <Route path="/dashboard"  element={<Dashboard />} />
-                <Route path="/leads"      element={<Leads />} />
-                <Route path="/campaigns"  element={<Campaigns />} />
-                <Route path="/logs"       element={<Logs />} />
-                <Route path="*"           element={<Navigate to="/dashboard" replace />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/leads"     element={<Leads />} />
+                <Route path="/campaigns" element={<Campaigns />} />
+                <Route path="/history"   element={<History />} />
+                <Route path="/logs"      element={<Logs />} />
+                <Route path="/users"     element={<Users />} />
+                <Route path="*"          element={<Navigate to="/dashboard" replace />} />
               </Routes>
             </Layout>
           </ProtectedRoute>
