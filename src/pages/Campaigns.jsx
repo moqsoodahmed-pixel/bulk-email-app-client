@@ -19,13 +19,23 @@ const STATUS_META = {
 
 const LAUNCHERDESK_TEMPLATE = `Hi {{name}},
 
-I came across {{company}} and wanted to reach out directly.
+Congratulations on your new venture!
 
-We work with businesses at every stage of their journey — from getting a website live, to setting up software, to handling compliance paperwork. Most founders find it easier to have one team handle everything rather than juggling multiple vendors.
+If you're currently setting up {{company}}, there's a smart way to get your website, software and compliance sorted — without coordinating with multiple vendors.
 
-I thought it might be useful for you as well.
+Launcherdesk provides complete digital and business solutions at one place — ideal for startups and growing businesses building their presence from scratch.
 
-Would it make sense to have a quick call this week? I can walk you through what we've done for similar businesses in Bengaluru.
+We offer:
+- Website & E-commerce Development
+- Business Software, CRM & Automation
+- Digital Marketing & Lead Generation
+- WhatsApp Business API & Customer Communication
+- Business Registration & Compliance Support
+- Branding, Logo & Creative Design
+
+Explore our services: Launcherdesk.com
+
+Setting up your business? Reply to this email and we'll help you find the right starting point for {{company}}.
 
 Regards,
 Sneha
@@ -35,13 +45,23 @@ sneha@launcherdesk.net`;
 
 const OFFICERESTORE_TEMPLATE = `Hi {{name}},
 
-I noticed {{company}} was recently registered and wanted to reach out.
+Congratulations on your new venture!
 
-We help businesses set up their office space with quality refurbished furniture — chairs, desks, workstations, and storage — at a fraction of new furniture prices. Many startups in Bangalore have used us to furnish their first office properly without overspending.
+If you're currently planning your office setup, there's a smart way to reduce your furniture budget without compromising on quality.
 
-If you're planning your workspace setup, I'd be happy to send across our catalogue or arrange a visit.
+Officerestore provides quality refurbished office furniture at affordable prices — ideal for startups and growing businesses setting up a new workspace.
 
-Would that be helpful?
+We offer:
+- Office Chairs
+- Workstations & Desks
+- Conference Furniture
+- Reception Furniture
+- Storage & Cabinets
+- Office Partitions & Accessories
+
+Browse our catalogue: Officerestore.com
+
+Planning your office setup? Reply to this email and we'll help you find the right furniture for your requirements.
 
 Regards,
 Sneha
@@ -219,8 +239,8 @@ function saveDefault(company, field, value) {
 
 // Default subjects per company
 const DEFAULT_SUBJECTS = {
-  launcherdesk:  'Quick question for {{company}}',
-  officerestore: 'Office setup for {{company}}',
+  launcherdesk:  'Complete digital & business setup for your new venture — Launcherdesk',
+  officerestore: 'Quality office furniture for your new workspace — Officerestore',
 };
 const DEFAULT_FROM_NAMES = {
   launcherdesk:  'Sneha',
