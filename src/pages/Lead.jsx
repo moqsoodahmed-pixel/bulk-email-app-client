@@ -424,6 +424,32 @@ export default function Leads() {
   const [showImport, setShowImport] = useState(false);
   const [deleteError, setDeleteError] = useState('');
 
+  async function handleExport() {
+    try {
+      const res = await fetch('/api/export/leads?format=xlsx', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('bea_token')}` },
+      });
+      if (!res.ok) { alert('No leads to export.'); return; }
+      const blob = await res.blob();
+      const fn = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || 'leads.xlsx';
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn; a.click();
+    } catch(e) { alert('Export failed: ' + e.message); }
+  }
+
+  async function handleArchive() {
+    if (!window.confirm('This will export all active leads to Excel and DELETE them from the list. Continue?')) return;
+    try {
+      const res = await fetch('/api/export/leads/archive?status=active', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('bea_token')}` },
+      });
+      if (!res.ok) { const d = await res.json().catch(()=>({})); alert(d.error || 'Archive failed.'); return; }
+      const blob = await res.blob();
+      const fn = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || 'leads_archive.xlsx';
+      const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn; a.click();
+      setPage(1);
+    } catch(e) { alert('Archive failed: ' + e.message); }
+  }
+
   const fetchLeads = useCallback(async () => {
     setLoading(true);
     setDeleteError('');
@@ -495,9 +521,19 @@ export default function Leads() {
             <h4 className="fw-bold mb-0">Leads</h4>
             <span className="text-muted small">{pagination.total.toLocaleString()} total</span>
           </div>
-          <button className="btn btn-primary" onClick={() => setShowImport(true)}>
-            + Import leads
-          </button>
+          <div className="d-flex gap-2 flex-wrap">
+            <button className="btn btn-outline-success btn-sm" onClick={handleExport}
+              title="Download all leads as Excel">
+              ⬇ Export Excel
+            </button>
+            <button className="btn btn-outline-warning btn-sm" onClick={handleArchive}
+              title="Export active leads to Excel then remove from list">
+              📦 Archive &amp; Clear
+            </button>
+            <button className="btn btn-primary" onClick={() => setShowImport(true)}>
+              + Import leads
+            </button>
+          </div>
         </div>
 
         <div className="row g-2 mb-3">
