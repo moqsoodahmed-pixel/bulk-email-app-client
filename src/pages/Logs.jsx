@@ -89,7 +89,7 @@ export default function Logs() {
       const blob = await res.blob();
       const a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || `export.xlsx`;
+      a.download = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || `export.csv`;
       a.click();
     } catch (e) { alert('Export failed: ' + e.message); }
     finally { setExporting(''); }
@@ -113,7 +113,7 @@ export default function Logs() {
             disabled={exporting === 'analytics'}>
             {exporting === 'analytics'
               ? <><span className="spinner-border spinner-border-sm me-1"/>Exporting…</>
-              : '⬇ Export analytics (.xlsx)'}
+              : '⬇ Export analytics (.csv)'}
           </button>
           <button className="btn btn-outline-secondary btn-sm" onClick={() => { fetchStats(); fetchEvents(); }}>
             ↻ Refresh

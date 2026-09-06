@@ -426,27 +426,34 @@ export default function Leads() {
 
   async function handleExport() {
     try {
-      const res = await fetch('/api/export/leads?format=xlsx', {
+      const res = await fetch('/api/export/leads?format=csv', {
         headers: { Authorization: `Bearer ${localStorage.getItem('bea_token')}` },
       });
       if (!res.ok) { alert('No leads to export.'); return; }
       const blob = await res.blob();
-      const fn = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || 'leads.xlsx';
+      const fn = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || 'leads.csv';
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn; a.click();
     } catch(e) { alert('Export failed: ' + e.message); }
   }
 
   async function handleArchive() {
-    if (!window.confirm('This will export all active leads to Excel and DELETE them from the list. Continue?')) return;
+    if (!window.confirm('This will export all active leads to CSV and DELETE them from the list. Continue?')) return;
     try {
       const res = await fetch('/api/export/leads/archive?status=active', {
         headers: { Authorization: `Bearer ${localStorage.getItem('bea_token')}` },
       });
-      if (!res.ok) { const d = await res.json().catch(()=>({})); alert(d.error || 'Archive failed.'); return; }
+      if (!res.ok) {
+        const d = await res.json().catch(()=>({}));
+        alert(d.error || 'Archive failed.');
+        return;
+      }
+      // Download the CSV file
       const blob = await res.blob();
-      const fn = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || 'leads_archive.xlsx';
+      const fn = res.headers.get('Content-Disposition')?.split('filename="')[1]?.replace('"','') || 'leads_archive.csv';
       const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = fn; a.click();
+      // Refresh the leads list — go back to page 1 since all active leads were deleted
       setPage(1);
+      setTimeout(() => fetchLeads(), 500); // small delay to let DB catch up
     } catch(e) { alert('Archive failed: ' + e.message); }
   }
 
