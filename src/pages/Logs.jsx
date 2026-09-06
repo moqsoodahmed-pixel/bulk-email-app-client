@@ -80,8 +80,8 @@ export default function Logs() {
     setExporting(type);
     try {
       const url = type === 'analytics'
-        ? `/api/export/analytics?company=${company}&days=${days}`
-        : `/api/export/leads?status=all`;
+        ? `https://bulk-email-app-server.onrender.com/api/export/analytics?company=${company}&days=${days}`
+        : `https://bulk-email-app-server.onrender.com/api/export/leads?status=all`;
       const res = await fetch(url, {
         headers: { Authorization: `Bearer ${localStorage.getItem('bea_token')}` },
       });

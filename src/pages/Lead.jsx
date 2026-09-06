@@ -426,7 +426,7 @@ export default function Leads() {
 
   async function handleExport() {
     try {
-      const res = await fetch('/api/export/leads?format=csv', {
+      const res = await fetch('https://bulk-email-app-server.onrender.com/api/export/leads?format=csv', {
         headers: { Authorization: `Bearer ${localStorage.getItem('bea_token')}` },
       });
       if (!res.ok) { alert('No leads to export.'); return; }
@@ -439,7 +439,7 @@ export default function Leads() {
   async function handleArchive() {
     if (!window.confirm('This will export all active leads to CSV and DELETE them from the list. Continue?')) return;
     try {
-      const res = await fetch('/api/export/leads/archive?status=active', {
+      const res = await fetch('https://bulk-email-app-server.onrender.com/api/export/leads/archive?status=active', {
         headers: { Authorization: `Bearer ${localStorage.getItem('bea_token')}` },
       });
       if (!res.ok) {
