@@ -50,7 +50,7 @@ Regards,
 Sneha
 Launcherdesk
 
-📞 +91 84588 45859
+📞 +91 8548854859
 ✉️ contact@launcherdesk.com
 🌐 Launcherdesk.com`;
 
