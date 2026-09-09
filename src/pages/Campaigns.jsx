@@ -26,22 +26,33 @@ If you're currently setting up {{company}}, there's a smart way to get your webs
 Launcherdesk provides complete digital and business solutions at one place — ideal for startups and growing businesses building their presence from scratch.
 
 We offer:
+
 - Website & E-commerce Development
 - Business Software, CRM & Automation
 - Digital Marketing & Lead Generation
 - WhatsApp Business API & Customer Communication
 - Business Registration & Compliance Support
 - Branding, Logo & Creative Design
+- Office & Commercial Furniture Solutions
 
-Explore our services: Launcherdesk.com
+🌐 Explore our services: Launcherdesk.com
 
-Setting up your business? Reply to this email and we'll help you find the right starting point for {{company}}.
+You can explore our solutions, compare options and choose what fits your business stage and budget.
+
+📍 Bengaluru
+🚀 End-to-end support available
+
+Setting up your business?
+
+Reply to this email and we'll help you find the right starting point for {{company}}.
 
 Regards,
 Sneha
 Launcherdesk
-+91 85488 54859
-sneha@launcherdesk.net`;
+
+📞 +91 84588 45859
+✉️ contact@launcherdesk.com
+🌐 Launcherdesk.com`;
 
 const OFFICERESTORE_TEMPLATE = `Hi {{name}},
 
@@ -59,15 +70,22 @@ We offer:
 - Storage & Cabinets
 - Office Partitions & Accessories
 
-Browse our catalogue: Officerestore.com
+🛒 Browse our catalogue: Officerestore.com
 
-Planning your office setup? Reply to this email and we'll help you find the right furniture for your requirements.
+You can explore our products, compare options and choose furniture that fits your office and budget.
+
+📍 Bangalore
+🚚 Delivery & installation support available
+
+Planning your office setup?
+
+Reply to this email and we'll help you find the right furniture for your requirements.
 
 Regards,
-Sneha
-Officerestore
-+91 70900 33660
-sneha@officerestore.in`;
+Officerestore Team
+📞 +91 70900 33660
+✉️ contact@officerestore.com
+🌐 Officerestore.com`;
 
 // ---------------------------------------------------------------------------
 // Helpers
