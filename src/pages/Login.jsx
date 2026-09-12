@@ -90,8 +90,8 @@ export default function Login() {
   }
 
   return (
-    <div className="d-flex align-items-center justify-content-center vh-100 bg-light">
-      <div className="card shadow-sm" style={{ width: 430 }}>
+    <div className="d-flex align-items-center justify-content-center min-vh-100 py-4 px-3 bg-light">
+      <div className="card shadow-sm" style={{ maxWidth: 430, width: '100%' }}>
         <div className="card-body p-4">
 
           <h4 className="mb-1 fw-bold">✉️ BulkEmail Manager</h4>
