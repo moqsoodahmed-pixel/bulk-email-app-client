@@ -35,7 +35,7 @@ We offer:
 - Branding, Logo & Creative Design
 - Office & Commercial Furniture Solutions
 
-🌐 Explore our services: Launcherdesk.com
+🌐 Explore our services: <a href="https://launcherdesk.com" target="_blank">Launcherdesk.com</a>
 
 You can explore our solutions, compare options and choose what fits your business stage and budget.
 
@@ -52,7 +52,7 @@ Launcherdesk
 
 📞 +91 8548854859
 ✉️ contact@launcherdesk.com
-🌐 Launcherdesk.com`;
+🌐 <a href="https://launcherdesk.com" target="_blank">Launcherdesk.com</a>`;
 
 const OFFICERESTORE_TEMPLATE = `Hi {{name}},
 
@@ -249,7 +249,16 @@ function StopButton({ campaignId, onStopped }) {
 const LS_KEY = (company, field) => `bulkemail_${company}_${field}`;
 
 function loadDefault(company, field, fallback = '') {
-  try { return localStorage.getItem(LS_KEY(company, field)) || fallback; } catch { return fallback; }
+  try {
+    const saved = localStorage.getItem(LS_KEY(company, field));
+    if (!saved) return fallback;
+    if (company === 'launcherdesk' && field === 'body') {
+      return saved
+        .replace('🌐 Explore our services: Launcherdesk.com', '🌐 Explore our services: <a href="https://launcherdesk.com" target="_blank">Launcherdesk.com</a>')
+        .replace('🌐 Launcherdesk.com', '🌐 <a href="https://launcherdesk.com" target="_blank">Launcherdesk.com</a>');
+    }
+    return saved;
+  } catch { return fallback; }
 }
 function saveDefault(company, field, value) {
   try { localStorage.setItem(LS_KEY(company, field), value); } catch { /**/ }
